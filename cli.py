@@ -1,5 +1,5 @@
-from llm_interfaces import Context, Groq_models
-from typing import Optional
+from conversation import Groq_models
+from context import Context
 
 def model_selection(print_menu = True):
     if print_menu:
@@ -28,26 +28,21 @@ Type the number to choose the model.
             return model_selection(False)
 
 
+
 system_prompt = "You are a helpfull asistant!"
 chat = Context() 
 model = 'llama3-70b-8192'
+tools = False
+
 print("""
 Weclcome to the cli app!
           
 \\system - lets you change the system prompt (standard assistant prompt)
 \\model - lets you change the model (lamma3 70B as a defalut)
 \\clear - clears the context
+\\tools - Togge tool usege (Off by defalut)
 
 or type whatever to get the response""")
-
-
-
-test_prompt = """ """
-
-
-test_system = """ """
-
-
 
 
 while True:
@@ -62,5 +57,12 @@ while True:
         case "\\clear":
             chat = Context()
             print("Context cleared!!")
+        case "\\tools":
+            if tools:
+                tools = False
+            else:
+                tools = True
+            print(f"Tools are set to: {tools}")
         case _:
-            chat = Groq_models().send_context_request(system_prompt, user_prompt, chat, model, True)
+            chat.add_user_message(user_prompt)
+            chat = Groq_models().send_request(model, chat, tools)

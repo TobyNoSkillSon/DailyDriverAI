@@ -1,3 +1,5 @@
+import json
+
 def avelable_tools() -> list[dict]:
     return [
         {
@@ -17,10 +19,13 @@ def avelable_tools() -> list[dict]:
                 },
             },
         }
+
+
+
     ]
 def avelable_functions() -> dict:
     return {
-            "get_game_score": tools.get_game_score,
+            "get_game_score": get_game_score
         }
 
 
