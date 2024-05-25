@@ -24,19 +24,6 @@ python cli.py
 - \clear - Clear the current context. 🧹
 - \tools - Toggle tool usage (default is off). 🛠️
 
-### Example
-
-Welcome to the CLI app! 🎉
-
-\system - Change the system prompt 🔄
-\model - Change the model (default is llama3-70b-8192) 🤖
-\clear - Clear the context 🧹
-\tools - Toggle tool usage (Off by default) 🛠️
-
-or type a message to get a response 💬
-
-## Code Overview
-
 ### Main Application
 
 The main application logic is in main.py, providing the CLI interface and interacting with the language models. 📝
