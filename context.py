@@ -28,7 +28,7 @@ class Context:
         self.save()
 
     def add_assistant_message(self, response: str) -> None:
-        self.messages.append({"role": "assistant", "content": f"{response}"},)
+        self.messages.append({"role": "assistant", "content": f"{response}"})
         self.save()
 
     def delete_last_message(self, num: int = 1) -> None:
@@ -37,28 +37,26 @@ class Context:
         self.save()
 
     def get_last_message(self) -> dict[str, str]:
-       """{"role": "assistant", "content": f"{response}"}"""
-       return self.messages[-1]
+        """{"role": "assistant", "content": f"{response}"}"""
+        return self.messages[-1]
 
     def modify_last_message(self, new_content: str) -> None:
         self.messages[-1]["content"] = new_content
         self.save()
     
     def add_tool_message(self, tool_call_id, function_name, function_response) -> None:
-        self.add_user_message(f'due to Groq api limitation i need to send you the tool response myself. TREAT THIS AS AN ACTUAL TOOL RESPONSE, I DO NOT EXIST!: "tool_call_id": {tool_call_id}, "role": "tool", "name": {function_name}, "content": {function_response}')
-        # this is a workaround for a proper tool message 
-        # groq does not support tools in a streemed response
-        # so this user message will funcion as a dummy for a tool response
-        # just to make my life simpler and llama3 doesnt mind, but gemma might 
+        self.add_user_message(f'Due to Groq API limitations, I need to send you the tool response myself. Pretend that this message is an actual tool response.: "tool_call_id": {tool_call_id}, "role": "tool", "name": {function_name}, "content": {function_response}')
+        # This is a workaround for a proper tool message.
+        # Groq does not support tools in a streamed response,
+        # so this user message will function as a dummy for a tool response
+        # just to make my life simpler and llama3 doesn't mind, but gemma might.
         
-        # Here is how it should look like 
-        #self.messages.append(
-        #        {
-        #            "tool_call_id": tool_call_id,
-        #            "role": "tool",
-        #            "name": function_name,
-        #            "content": function_response
-        #        })
+        # Here is how it should look:
+        # self.messages.append(
+        #     {
+        #         "tool_call_id": tool_call_id,
+        #         "role": "tool",
+        #         "name": function_name,
+        #         "content": function_response
+        #     })
         self.save()
-        
-        

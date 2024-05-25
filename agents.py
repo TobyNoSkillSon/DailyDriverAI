@@ -1,4 +1,3 @@
-
 from dotenv import load_dotenv
 from groq import Groq
 import time
@@ -7,35 +6,34 @@ import os
 
 
 def send_request(model: str, system_prompt: str, user_prompt: str) -> str:
-        '''
-        Sends a simple request to the specified model
-        '''
-        load_dotenv()
-        key = os.getenv('GROQ_API_KEY')
-        client = Groq(api_key=key)
+    '''
+    Sends a simple request to the specified model
+    '''
+    load_dotenv()
+    key = os.getenv('GROQ_API_KEY')
+    client = Groq(api_key=key)
 
-        max_tokens = 8192
-        template = [
-            {"role": "system", "content": f"{system_prompt}"},
-            {"role": "user", "content": f"{user_prompt}"}
-            ]
-        
-        response = client.chat.completions.create(
-                model=model,
-                messages= template,
-                max_tokens=max_tokens
-            )
-        return response.choices[0].message.content
+    max_tokens = 8192
+    template = [
+        {"role": "system", "content": f"{system_prompt}"},
+        {"role": "user", "content": f"{user_prompt}"}
+    ]
+    
+    response = client.chat.completions.create(
+        model=model,
+        messages=template,
+        max_tokens=max_tokens
+    )
+    return response.choices[0].message.content
 
 
-
-class Custom_agent:
-    def __init__(self, agent_system_promt: str) -> None:
-        self.system_prompt = agent_system_promt
+class CustomAgent:
+    def __init__(self, agent_system_prompt: str) -> None:
+        self.system_prompt = agent_system_prompt
         
     def send_request_return_type(self, user_prompt: str, return_type: type) -> type:
-        '''This function ensures that the response is converted correctly to the desired type list, int, dict ect.
-        There are 10 retries, if all of them fail, retuns None'''
+        '''This function ensures that the response is converted correctly to the desired type list, int, dict, etc.
+        There are 10 retries, if all of them fail, returns None'''
         max_retries = 10
         attempts = 0
         while attempts < max_retries:
@@ -48,5 +46,5 @@ class Custom_agent:
                 attempts += 1
                 print(f"Attempt {attempts}/{max_retries} failed due to: {e}. Retrying in 2 seconds...")
                 time.sleep(2)
-        print(f"agent failed after maximum attempts")
-
+        print(f"Agent failed after maximum attempts")
+        return None

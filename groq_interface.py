@@ -51,39 +51,39 @@ class Groq_models:
         return context
 
     def handle_tool_calls(self, tool_calls, context: Context):
-        available_functions = tools.avelable_functions()
-        for tool_call in tool_calls:
-            function_name = tool_call.function.name
-            function_to_call = available_functions[function_name]
-            function_args = json.loads(tool_call.function.arguments)
-            function_response = function_to_call(
-                team_name=function_args.get("team_name")
-            )
-            context.add_tool_message(tool_call.id, function_name, function_response)
-        return context
+        # available_functions = tools.available_functions()
+        # for tool_call in tool_calls:
+            # TODO: implement general tool calling
+
+        return None
 
     def handle_response(self, model: str, max_tokens: int, context: Context):
         response = self.client.chat.completions.create(
             model=model,
             max_tokens=max_tokens,
             messages=context.to_list(),
-            tools=tools.avelable_tools(),
+            # tools=tools.available_tools(),
             tool_choice="auto",
         )
-        response_message = response.choices[0].message
-        tool_calls = response_message.tool_calls
+        response_message = response.choices[0].message.content
+        # tool_calls = response_message.tool_calls
+        print(response_message)
         context.add_assistant_message(response_message)
 
-        if tool_calls:
-            context = self.handle_tool_calls(tool_calls, context)
-            second_response = self.client.chat.completions.create(
-                model=model,
-                messages=context.to_list()
-            )
-            print(second_response.choices[0].message.content)
-            context.add_assistant_message(second_response.choices[0].message.content)
-        else:
-            context.add_assistant_message(response.choices[0].message.content)
+        # if tool_calls:
+           #  context.add_assistant_message(response.choices[0].message.content)
+
+            # TODO: impLement handle_tools 
+            #                              
+            # context = self.handle_tool_calls(tool_calls, context)
+            # second_response = self.client.chat.completions.create(
+            #     model=model,
+            #     messages=context.to_list()
+            # )
+            # print(second_response.choices[0].message.content)
+            # context.add_assistant_message(second_response.choices[0].message.content)
+        # else:
+            # context.add_assistant_message(response.choices[0].message.content)
         return context
 
     def send_request(self, model: str, context: Context = None, tools: bool=False) -> (Context | str):
