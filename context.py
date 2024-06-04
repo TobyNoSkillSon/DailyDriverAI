@@ -23,6 +23,10 @@ class Context:
         with open(self.filename, 'w') as f:
             json.dump(self.messages, f, indent=4)
 
+    def add_system_message(self, prompt:str) -> None: 
+        self.messages.insert(0, {"role": "system", "content": f"{prompt}"})
+        self.save()
+
     def add_user_message(self, prompt: str) -> None:
         self.messages.append({"role": "user", "content": f"{prompt}"})
         self.save()
@@ -44,19 +48,17 @@ class Context:
         self.messages[-1]["content"] = new_content
         self.save()
     
+    def modify_system_message(self, prompt: str) -> None:
+        self.messages.pop(0)
+        self.add_system_message(prompt)
+    
     def add_tool_message(self, tool_call_id, function_name, function_response) -> None:
-        self.add_user_message(f'Due to Groq API limitations, I need to send you the tool response myself. Pretend that this message is an actual tool response.: "tool_call_id": {tool_call_id}, "role": "tool", "name": {function_name}, "content": {function_response}')
-        # This is a workaround for a proper tool message.
-        # Groq does not support tools in a streamed response,
-        # so this user message will function as a dummy for a tool response
-        # just to make my life simpler and llama3 doesn't mind, but gemma might.
-        
-        # Here is how it should look:
-        # self.messages.append(
-        #     {
-        #         "tool_call_id": tool_call_id,
-        #         "role": "tool",
-        #         "name": function_name,
-        #         "content": function_response
-        #     })
+        # they fixed it :D
+        self.messages.append(
+            {
+                "tool_call_id": tool_call_id,
+                "role": "tool",
+                "name": function_name,
+                "content": function_response
+             })
         self.save()
