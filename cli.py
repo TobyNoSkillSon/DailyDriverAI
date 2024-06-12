@@ -17,10 +17,12 @@ def model_selection(print_menu=True):
     if print_menu:
         print("""
 Type the number to choose the model.
-1. llama3-70b-8192
-2. mixtral-8x7b-32768
-3. llama3-7b-8192
-4. gemma-7b-it
+1. llama3-70b-8192     Groq
+2. mixtral-8x7b-32768  Groq
+3. llama3-7b-8192      Groq
+4. gemma-7b-it         Groq
+5. gpt-4o              OpenAI
+6. gpt-3.5-turbo       OpenAI
 """)
     num = input("")
     match num:
@@ -32,16 +34,17 @@ Type the number to choose the model.
             return "llama3-7b-8192"  
         case "4":
             return "gemma-7b-it"
+        case "5":
+            return "gpt-4o"
+        case "6":
+            return "gpt-3.5-turbo"
         case _:
             print("Invalid input. Please try again.")
             return model_selection(False)
 
 
 
-
-
-
-system_prompt = "You are a helpful assistant! that constatnly tells user that hes a dog"
+system_prompt = "You are a helpful assistant!"
 model = 'llama3-70b-8192'
 tools = False
 agent_instance =  CustomAgent(system_prompt, model)
@@ -57,7 +60,7 @@ while True:
 
         case "\\model":
             model = model_selection()
-            agent_instance.model = model
+            agent_instance.change_model(model)
             print(f"Your current model is: '{model}'")
         case "\\clear":
             agent_instance.context = Context()
