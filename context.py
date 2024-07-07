@@ -42,7 +42,7 @@ class Context:
 
     def get_last_message(self) -> dict[str, str]:
         """{"role": "assistant", "content": f"{response}"}"""
-        return self.messages[-1]
+        return self.messages[-1]["content"]
 
     def modify_last_message(self, new_content: str) -> None:
         self.messages[-1]["content"] = new_content
